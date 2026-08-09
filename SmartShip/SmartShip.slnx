@@ -1,6 +1,7 @@
 <Solution>
   <Project Path="SmartShip.AdminService/SmartShip.AdminService.csproj" />
   <Project Path="SmartShip.ApiGateway/SmartShip.ApiGateway.csproj" />
+  <Project Path="SmartShip.identityService.Tests/SmartShip.identityService.Tests.csproj" Id="9550a5c4-554d-4efe-9832-e20c0a55cb2a" />
   <Project Path="SmartShip.IdentityService/SmartShip.IdentityService.csproj" />
   <Project Path="SmartShip.ShipmentService/SmartShip.ShipmentService.csproj" />
   <Project Path="SmartShip.TrackingService/SmartShip.TrackingService.csproj" />

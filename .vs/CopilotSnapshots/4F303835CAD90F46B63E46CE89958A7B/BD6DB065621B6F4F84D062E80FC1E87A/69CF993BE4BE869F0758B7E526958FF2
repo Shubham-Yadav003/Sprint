@@ -1,0 +1,54 @@
+﻿
+using SmartShip.IdentityService.Application.DTOs;
+using SmartShip.IdentityService.Application.Interfaces;
+using SmartShip.IdentityService.Domain.Entities;
+using SmartShip.IdentityService.Infrastructure.Data;
+
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore; // for hashing the password
+namespace SmartShip.IdentityService.Application.Services;
+
+public class AuthService : IAuthService
+{
+    private readonly IdentityDbContext _context;
+    private readonly PasswordHasher<User> _passwordHasher;
+
+    public AuthService(IdentityDbContext context)
+    {
+        _context = context;
+        _passwordHasher = new PasswordHasher<User>();
+    }
+
+    public async Task<bool> RegisterAsync(RegisterRequestDto request)
+    { // check if dupliate user exists
+
+        var existingUser = await _context.Users.AnyAsync(u => u.Email == request.Email);
+
+        if (existingUser)
+        {
+            return false;
+        }
+
+
+        var user = new User
+        {
+            FullName = request.FullName,
+            Email = request.Email,
+            Role = "Customer"
+        };
+
+        // first user will be created and then password will be hashed
+        user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
+
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+
+        return new RegisterResponseDto
+        {
+            Success = true,
+            Message = "Registeration Successful"
+        };
+    }
+
+}
+
