@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SmartShip.ShipmentService.Infrastructure.Data;
 using SmartShip.ShipmentService.Application.Interfaces;
 using SmartShip.ShipmentService.Application.Services;
@@ -32,17 +32,9 @@ builder.Services.AddDbContext<ShipmentDbContext>(options =>
 
 // Register the service
 builder.Services.AddScoped<IShipmentService, ShipmentService>();
-builder.Services.AddScoped<IAddressService, AddressService>();
 
 // Add services to the container
-//for enums as well
-
-builder.Services.AddControllers()  // enum -> json 
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(
-            new System.Text.Json.Serialization.JsonStringEnumConverter());
-    });
+builder.Services.AddControllers();
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -87,7 +79,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
