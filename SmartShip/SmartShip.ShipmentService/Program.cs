@@ -6,6 +6,8 @@ using SmartShip.ShipmentService.Application.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+// exception handling
+using SmartShip.ShipmentService.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,6 +78,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 var app = builder.Build();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 // Configure the HTTP request pipeline
 

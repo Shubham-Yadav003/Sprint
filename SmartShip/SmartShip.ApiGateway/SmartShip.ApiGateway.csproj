@@ -6,4 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MMLib.SwaggerForOcelot" Version="10.0.2" />
+    <PackageReference Include="Ocelot" Version="25.0.0" />
+  </ItemGroup>
+
 </Project>
