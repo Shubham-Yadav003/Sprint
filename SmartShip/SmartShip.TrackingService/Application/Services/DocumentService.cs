@@ -9,21 +9,42 @@ namespace SmartShip.TrackingService.Application.Services
     public class DocumentService : IDocumentService
     {
         private readonly TrackingDbContext _context;
+        private readonly IFileStorageService _fileStorageService;
 
-        public DocumentService(TrackingDbContext context)
+        public DocumentService(TrackingDbContext context, IFileStorageService fileStorageService)
         {
             _context = context;
+            _fileStorageService = fileStorageService;
         }
 
-        public async Task<ShipmentDocumentDto> CreateDocumentAsync(
-            CreateShipmentDocumentDto dto)
+        public async Task<ShipmentDocumentDto> UploadDocumentAsync(
+             int shipmentId,
+            string documentType,
+            IFormFile file)
         {
+
+            if (shipmentId <= 0)
+            {
+                throw new ArgumentException("Invalid shipment ID.");
+            }
+
+            if (string.IsNullOrWhiteSpace(documentType))
+            {
+                throw new ArgumentException("Document type is required.");
+            }
+
+            if (file == null || file.Length == 0)
+            {
+                throw new ArgumentException("File is required.");
+            }
+
+            var filePath = await _fileStorageService.SaveFileAsync(file, "Documents");
             var document = new ShipmentDocument
             {
-                ShipmentId = dto.ShipmentId,
-                DocumentType = dto.DocumentType,
-                FileName = dto.FileName,
-                FilePath = dto.FilePath,
+                ShipmentId = shipmentId,
+                DocumentType = documentType,
+                FileName = file.FileName,
+                FilePath = filePath,
                 UploadedAt = DateTime.UtcNow
             };
 
@@ -31,13 +52,13 @@ namespace SmartShip.TrackingService.Application.Services
 
             await _context.SaveChangesAsync();
 
-            return new ShipmentDocumentDto
+            return new ShipmentDocumentDto // return dto
             {
                 Id = document.Id,
                 ShipmentId = document.ShipmentId,
                 DocumentType = document.DocumentType,
-                FileName = document.FileName,
-                FilePath = document.FilePath,
+                FileName = file.FileName,
+                FilePath = filePath,
                 UploadedAt = document.UploadedAt
             };
         }

@@ -9,21 +9,45 @@ namespace SmartShip.TrackingService.Application.Services
     public class DeliveryProofService : IDeliveryProofService
     {
         private readonly TrackingDbContext _context;
+        private readonly IFileStorageService _fileStorageService;
 
-        public DeliveryProofService(TrackingDbContext context)
+        public DeliveryProofService(TrackingDbContext context, IFileStorageService fileStorageService)
         {
             _context = context;
+            _fileStorageService = fileStorageService;
         }
 
-        public async Task<DeliveryProofDto> CreateDeliveryProofAsync(
-            CreateDeliveryProofDto dto)
+        public async Task<DeliveryProofDto> UploadDeliveryProofAsync(
+            int shipmentId,
+            string proofType,
+            IFormFile file)
         {
+
+            if (shipmentId <= 0)
+            {
+                throw new ArgumentException("Invalid shipment ID.");
+            }
+
+            if (string.IsNullOrWhiteSpace(proofType))
+            {
+                throw new ArgumentException("Proof type is required.");
+            }
+
+            if (file == null || file.Length == 0)
+            {
+                throw new ArgumentException("File is required.");
+            }
+
+            var filePath = await _fileStorageService.SaveFileAsync(
+               file,
+               "DeliveryProofs");
+
             var proof = new DeliveryProof
             {
-                ShipmentId = dto.ShipmentId,
-                ProofType = dto.ProofType,
-                FileName = dto.FileName,
-                FilePath = dto.FilePath,
+                ShipmentId = shipmentId,
+                ProofType = proofType,
+                FileName = file.FileName,
+                FilePath = filePath,
                 UploadedAt = DateTime.UtcNow
             };
 

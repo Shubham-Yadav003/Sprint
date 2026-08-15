@@ -1,5 +1,6 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders; // for viewing actual file
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 // for authorize button
@@ -86,6 +87,19 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+var uploadsRoot = Path.Combine(app.Environment.ContentRootPath, "UploadedFiles");
+// actual file view
+if (!Directory.Exists(uploadsRoot))
+{
+    Directory.CreateDirectory(uploadsRoot);
+}
+// actual file view
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(uploadsRoot),
+    RequestPath = "/uploads"
+});
 
 
 app.UseHttpsRedirection();

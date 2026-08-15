@@ -1,4 +1,4 @@
-{
+﻿{
   "Routes": [
     {
       "DownstreamPathTemplate": "/api/Auth/{everything}",
@@ -133,22 +133,6 @@
     },
 
     {
-      "DownstreamPathTemplate": "/api/Document/upload",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7107
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/document/upload",
-      "UpstreamHttpMethod": [
-        "POST"
-      ],
-      "SwaggerKey": "Tracking"
-    },
-
-    {
       "DownstreamPathTemplate": "/api/Document/shipment/{shipmentId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -160,22 +144,6 @@
       "UpstreamPathTemplate": "/gateway/document/shipment/{shipmentId}",
       "UpstreamHttpMethod": [
         "GET"
-      ],
-      "SwaggerKey": "Tracking"
-    },
-
-    {
-      "DownstreamPathTemplate": "/api/DeliveryProof/upload",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7107
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/delivery-proof/upload",
-      "UpstreamHttpMethod": [
-        "POST"
       ],
       "SwaggerKey": "Tracking"
     },

@@ -4,8 +4,10 @@ namespace SmartShip.TrackingService.Application.Interfaces
 {
     public interface IDeliveryProofService
     {
-        Task<DeliveryProofDto> CreateDeliveryProofAsync(
-           CreateDeliveryProofDto dto);
+        Task<DeliveryProofDto> UploadDeliveryProofAsync(
+            int shipmentId,
+            string proofType,
+            IFormFile file);
 
         Task<List<DeliveryProofDto>> GetProofsByShipmentIdAsync(
             int shipmentId);
