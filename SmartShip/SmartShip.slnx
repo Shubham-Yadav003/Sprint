@@ -5,5 +5,6 @@
   <Project Path="SmartShip.IdentityService/SmartShip.IdentityService.csproj" />
   <Project Path="SmartShip.ShipmentService.Tests/SmartShip.ShipmentService.Tests.csproj" Id="1108368d-48a8-4d1a-ab40-700a0996b958" />
   <Project Path="SmartShip.ShipmentService/SmartShip.ShipmentService.csproj" />
+  <Project Path="SmartShip.TrackingService.Tests/SmartShip.TrackingService.Tests.csproj" Id="1c66d991-e092-4cd6-9b09-8a098f4ca621" />
   <Project Path="SmartShip.TrackingService/SmartShip.TrackingService.csproj" />
 </Solution>
