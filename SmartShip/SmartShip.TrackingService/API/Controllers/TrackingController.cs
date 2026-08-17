@@ -6,7 +6,7 @@ namespace SmartShip.TrackingService.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    
     public class TrackingController: ControllerBase
     {
         private readonly ITrackingService _trackingService;
@@ -17,6 +17,7 @@ namespace SmartShip.TrackingService.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateTrackingEvent(
             CreateTrackingEventDto dto)
         {
@@ -26,6 +27,7 @@ namespace SmartShip.TrackingService.API.Controllers
         }
 
         [HttpGet("shipment/{shipmentId}")]
+        [Authorize(Roles = "Customer,Admin")]
         public async Task<IActionResult> GetTrackingEvents(int shipmentId)
         {
             var result = await _trackingService.GetTrackingEventsByShipmentIdAsync(

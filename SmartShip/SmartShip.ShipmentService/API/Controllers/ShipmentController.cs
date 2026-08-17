@@ -9,7 +9,7 @@ namespace SmartShip.ShipmentService.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Customer")]
+   
     public class ShipmentController: ControllerBase
     {
         private readonly IShipmentService _shipmentService;
@@ -20,6 +20,7 @@ namespace SmartShip.ShipmentService.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> CreateShipment(CreateShipmentDto dto)
         {
             var customerId = int.Parse(
@@ -32,6 +33,7 @@ namespace SmartShip.ShipmentService.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetShipmentById(int id)
         {
             var customerId = int.Parse(
@@ -48,6 +50,7 @@ namespace SmartShip.ShipmentService.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetAllShipments()
         {
             var customerId = int.Parse(
@@ -59,6 +62,7 @@ namespace SmartShip.ShipmentService.API.Controllers
         }
 
         [HttpPost("{id}/book")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> BookShipment(int id)
         {
             var customerId = int.Parse(
@@ -76,6 +80,7 @@ namespace SmartShip.ShipmentService.API.Controllers
 
 
         [HttpPost("{id}/status")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateShipmentStatus(int id, UpdateShipmentStatusDto dto) // dto becz admin can add only certain type of status
         {
             var result = await _shipmentService.UpdateShipmentStatusAsync(id, dto.Status);

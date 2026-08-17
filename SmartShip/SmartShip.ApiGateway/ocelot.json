@@ -194,6 +194,72 @@
         "GET"
       ],
       "SwaggerKey": "Tracking"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/Locations",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7120
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/admin/locations",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
+      "SwaggerKey": "Admin"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/Locations/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7120
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/admin/locations/{id}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "PUT"
+      ],
+      "SwaggerKey": "Admin"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/Locations/{id}/toggle-status",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7120
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/admin/locations/{id}/toggle-status",
+      "UpstreamHttpMethod": [
+        "PATCH"
+      ],
+      "SwaggerKey": "Admin"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/AdminShipments/{shipmentId}/progress",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7120
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/admin/shipments/{shipmentId}/progress",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "SwaggerKey": "Admin"
     }
   ],
 
@@ -208,7 +274,6 @@
         }
       ]
     },
-
     {
       "Key": "Shipment",
       "Config": [
@@ -219,7 +284,6 @@
         }
       ]
     },
-
     {
       "Key": "Tracking",
       "Config": [
@@ -227,6 +291,16 @@
           "Name": "Tracking Service",
           "Version": "v1",
           "Url": "https://localhost:7107/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "Admin",
+      "Config": [
+        {
+          "Name": "Admin Service",
+          "Version": "v1",
+          "Url": "https://localhost:7120/swagger/v1/swagger.json"
         }
       ]
     }
