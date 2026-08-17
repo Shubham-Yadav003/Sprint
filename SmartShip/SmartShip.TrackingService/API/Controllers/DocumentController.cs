@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SmartShip.TrackingService.Application.DTOs;
 using SmartShip.TrackingService.Application.Interfaces;
 namespace SmartShip.TrackingService.API.Controllers
-{
+{//start
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
