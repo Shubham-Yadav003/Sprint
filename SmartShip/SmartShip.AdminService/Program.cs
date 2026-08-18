@@ -1,32 +1,41 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SmartShip.AdminService.API.Middleware;
 using SmartShip.AdminService.Application.Interfaces;
 using SmartShip.AdminService.Application.Services;
 using SmartShip.AdminService.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Add Controllers
-builder.Services.AddControllers();
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddHttpClient();
+// 1. Add Controllers and serialize enums as strings for Swagger dropdowns
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
-// 2. Register DbContext
+// 2. Configure Entity Framework Core with SQL Server
 builder.Services.AddDbContext<AdminDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 3. Register Application Services
-builder.Services.AddScoped<ILocationService, LocationService>();
+// 3. Register HTTP Context Accessor and Client Factory for cross-service calls
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
+
+// 4. Register Application Services (Dependency Injection)
+builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<IIssueService, IssueService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IShipmentManagementService, ShipmentManagementService>();
 
-// 4. Configure JWT Authentication
+// 5. Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
-var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
+var secretKey = jwtSettings["Key"];
+var key = Encoding.UTF8.GetBytes(secretKey);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -43,11 +52,12 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = jwtSettings["Issuer"],
         ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(key)
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        RoleClaimType = "role"
     };
 });
 
-// 5. Configure Swagger with JWT "Authorize" Button
+// 6. Configure Swagger with JWT Bearer Authorization support
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -57,7 +67,6 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1"
     });
 
-    // Add JWT Bearer Security Definition
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -68,7 +77,6 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Enter your JWT token directly (e.g. eyJhbGciOi...)"
     });
 
-    // Enforce JWT across protected endpoints
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -87,16 +95,15 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// 6. HTTP Pipeline Configuration
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// 7. Configure Middleware Pipeline
+app.UseMiddleware<GlobalExceptionMiddleware>();
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-// NOTE: UseAuthentication must come BEFORE UseAuthorization
+// Authentication MUST precede Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 

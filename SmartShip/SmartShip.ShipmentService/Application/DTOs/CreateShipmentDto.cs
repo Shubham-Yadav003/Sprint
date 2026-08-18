@@ -1,17 +1,23 @@
-﻿using SmartShip.ShipmentService.Domain.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using SmartShip.ShipmentService.Domain.Entities;
 
 namespace SmartShip.ShipmentService.Application.DTOs
 {
     public class CreateShipmentDto
     {
+        [Range(1, int.MaxValue)]
         public int OriginAddressId { get; set; }
 
+        [Range(1, int.MaxValue)]
         public int DestinationAddressId { get; set; }
 
         public ShipmentType ShipmentType { get; set; }
 
+        [Required]
+        [StringLength(250)]
         public string PackageDescription { get; set; } = string.Empty;
 
+        
         public decimal PackageWeight { get; set; }
     }
 }

@@ -1,0 +1,312 @@
+﻿{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/Auth/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7040
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/auth/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ],
+      "SwaggerKey": "Identity"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/Shipment",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7116
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/shipment",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
+      "SwaggerKey": "Shipment"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/Shipment/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7116
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/shipment/{id}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "SwaggerKey": "Shipment"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/Shipment/{id}/book",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7116
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/shipment/{id}/book",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "SwaggerKey": "Shipment"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/Shipment/{id}/status",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7116
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/shipment/{id}/status",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "SwaggerKey": "Shipment"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/Address",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7116
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/address",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "SwaggerKey": "Shipment"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/Tracking",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7107
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/tracking",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "SwaggerKey": "Tracking"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/Tracking/shipment/{shipmentId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7107
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/tracking/shipment/{shipmentId}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "SwaggerKey": "Tracking"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/Document/upload",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7107
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/document/upload",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "SwaggerKey": "Tracking"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/Document/shipment/{shipmentId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7107
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/document/shipment/{shipmentId}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "SwaggerKey": "Tracking"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/DeliveryProof/upload",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7107
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/delivery-proof/upload",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "SwaggerKey": "Tracking"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/DeliveryProof/shipment/{shipmentId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7107
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/delivery-proof/shipment/{shipmentId}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "SwaggerKey": "Tracking"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/Locations",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7120
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/admin/locations",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
+      "SwaggerKey": "Admin"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/Locations/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7120
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/admin/locations/{id}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "PUT"
+      ],
+      "SwaggerKey": "Admin"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/Locations/{id}/toggle-status",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7120
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/admin/locations/{id}/toggle-status",
+      "UpstreamHttpMethod": [
+        "PATCH"
+      ],
+      "SwaggerKey": "Admin"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/AdminShipments/{shipmentId}/progress",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7120
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/admin/shipments/{shipmentId}/progress",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "SwaggerKey": "Admin"
+    }
+  ],
+
+  "SwaggerEndPoints": [
+    {
+      "Key": "Identity",
+      "Config": [
+        {
+          "Name": "Identity Service",
+          "Version": "v1",
+          "Url": "https://localhost:7040/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "Shipment",
+      "Config": [
+        {
+          "Name": "Shipment Service",
+          "Version": "v1",
+          "Url": "https://localhost:7116/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "Tracking",
+      "Config": [
+        {
+          "Name": "Tracking Service",
+          "Version": "v1",
+          "Url": "https://localhost:7107/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "Admin",
+      "Config": [
+        {
+          "Name": "Admin Service",
+          "Version": "v1",
+          "Url": "https://localhost:7120/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ],
+
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7145"
+  }
+}

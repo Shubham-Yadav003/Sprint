@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 // for authorize button
 using Microsoft.OpenApi.Models;
+using SmartShip.TrackingService.API.Middleware;
 using SmartShip.TrackingService.Application.Interfaces;
 using SmartShip.TrackingService.Application.Services;
 using SmartShip.TrackingService.Infrastructure.Data;
@@ -80,6 +81,8 @@ builder.Services.AddEndpointsApiExplorer();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

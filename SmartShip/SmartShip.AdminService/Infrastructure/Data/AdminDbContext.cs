@@ -11,6 +11,7 @@ namespace SmartShip.AdminService.Infrastructure.Data
         }
 
         public DbSet<Location>Locations { get; set; }
+        public DbSet<DeliveryIssue> DeliveryIssues { get; set; }
     }
 }
 //It connects our Location entity to EF Core.

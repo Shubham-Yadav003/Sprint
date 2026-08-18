@@ -202,7 +202,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7120
+          "Port": 7067
         }
       ],
       "UpstreamPathTemplate": "/gateway/admin/locations",
@@ -219,7 +219,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7120
+          "Port": 7067
         }
       ],
       "UpstreamPathTemplate": "/gateway/admin/locations/{id}",
@@ -236,7 +236,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7120
+          "Port": 7067
         }
       ],
       "UpstreamPathTemplate": "/gateway/admin/locations/{id}/toggle-status",
@@ -247,17 +247,66 @@
     },
 
     {
-      "DownstreamPathTemplate": "/api/AdminShipments/{shipmentId}/progress",
+      "DownstreamPathTemplate": "/api/admin/shipments/{shipmentId}/progress",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7120
+          "Port": 7067
         }
       ],
       "UpstreamPathTemplate": "/gateway/admin/shipments/{shipmentId}/progress",
       "UpstreamHttpMethod": [
         "PUT"
+      ],
+      "SwaggerKey": "Admin"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/AdminIssues",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7067
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/admin/issues",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
+      "SwaggerKey": "Admin"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/AdminIssues/{id}/resolve",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7067
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/admin/issues/{id}/resolve",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "SwaggerKey": "Admin"
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/AdminReports/summary",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7067
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/admin/reports/summary",
+      "UpstreamHttpMethod": [
+        "GET"
       ],
       "SwaggerKey": "Admin"
     }
@@ -300,7 +349,7 @@
         {
           "Name": "Admin Service",
           "Version": "v1",
-          "Url": "https://localhost:7120/swagger/v1/swagger.json"
+          "Url": "https://localhost:7067/swagger/v1/swagger.json"
         }
       ]
     }

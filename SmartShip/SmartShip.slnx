@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="SmartShip.AdminService.Tests/SmartShip.AdminService.Tests.csproj" Id="6bbf8061-1afc-44ef-8cd2-08976edadbac" />
   <Project Path="SmartShip.AdminService/SmartShip.AdminService.csproj" />
   <Project Path="SmartShip.ApiGateway/SmartShip.ApiGateway.csproj" />
   <Project Path="SmartShip.identityService.Tests/SmartShip.identityService.Tests.csproj" Id="9550a5c4-554d-4efe-9832-e20c0a55cb2a" />
