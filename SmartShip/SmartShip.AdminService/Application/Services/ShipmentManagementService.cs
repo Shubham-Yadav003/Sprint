@@ -40,13 +40,9 @@ namespace SmartShip.AdminService.Application.Services
                 return (false, $"Location '{location.Name}' is currently inactive.");
             }
 
-            // 2. Prepare HTTP client and forward JWT token
+            // 2. Prepare HTTP client for internal service calls.
             var client = _httpClientFactory.CreateClient();
-            var authHeader = _httpContextAccessor.HttpContext?.Request.Headers["Authorization"].ToString();
-            if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
-            {
-                client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(authHeader);
-            }
+            client.DefaultRequestHeaders.Add("X-Service-Key", _configuration["ServiceAuth:Key"]);
 
             var shipmentBaseUrl = _configuration["ServiceUrls:ShipmentService"];
             var trackingBaseUrl = _configuration["ServiceUrls:TrackingService"];
@@ -55,7 +51,7 @@ namespace SmartShip.AdminService.Application.Services
             var statusPayload = JsonSerializer.Serialize(new { status = dto.Status });
             var statusContent = new StringContent(statusPayload, Encoding.UTF8, "application/json");
 
-            var shipmentResponse = await client.PostAsync($"{shipmentBaseUrl}/api/Shipment/{shipmentId}/status", statusContent);
+            var shipmentResponse = await client.PostAsync($"{shipmentBaseUrl}/api/Shipment/internal/{shipmentId}/status", statusContent);
             if (!shipmentResponse.IsSuccessStatusCode)
             {
                 return (false, $"Failed to update status in ShipmentService. (Status: {shipmentResponse.StatusCode})");
@@ -71,13 +67,36 @@ namespace SmartShip.AdminService.Application.Services
             });
             var trackingContent = new StringContent(trackingPayload, Encoding.UTF8, "application/json");
 
-            var trackingResponse = await client.PostAsync($"{trackingBaseUrl}/api/Tracking", trackingContent);
+            var trackingResponse = await client.PostAsync($"{trackingBaseUrl}/api/Tracking/internal", trackingContent);
             if (!trackingResponse.IsSuccessStatusCode)
             {
                 return (false, $"Shipment status updated, but failed to log tracking event. (Status: {trackingResponse.StatusCode})");
             }
 
-            return (true, $"Shipment status updated to '{dto.Status}' and tracking event logged at '{location.Name}'.");
+            // A Delayed status is always a delivery issue. For other issue types,
+            // the admin supplies dto.IssueType in the progress request.
+            var issueType = dto.IssueType;
+            if (issueType == null && string.Equals(dto.Status, "Delayed", StringComparison.OrdinalIgnoreCase))
+            {
+                issueType = global::SmartShip.AdminService.Domain.Entities.IssueType.Delayed;
+            }
+
+            if (issueType != null)
+            {
+                _context.DeliveryIssues.Add(new global::SmartShip.AdminService.Domain.Entities.DeliveryIssue
+                {
+                    ShipmentId = shipmentId,
+                    IssueType = issueType.Value,
+                    Description = dto.Description,
+                    Status = "Open",
+                    CreatedAt = DateTime.UtcNow
+                });
+
+                await _context.SaveChangesAsync();
+            }
+
+            var issueMessage = issueType != null ? " An open delivery issue was created." : string.Empty;
+            return (true, $"Shipment status updated to '{dto.Status}' and tracking event logged at '{location.Name}'.{issueMessage}");
         }
     }
 }

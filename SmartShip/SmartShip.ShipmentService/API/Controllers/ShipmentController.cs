@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Text;
+using System.Text.Json;
 using SmartShip.ShipmentService.Application.DTOs;
 using SmartShip.ShipmentService.Application.Interfaces;
 
@@ -13,10 +15,14 @@ namespace SmartShip.ShipmentService.API.Controllers
     public class ShipmentController: ControllerBase
     {
         private readonly IShipmentService _shipmentService;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _configuration;
 
-        public ShipmentController(IShipmentService shipmentService)
+        public ShipmentController(IShipmentService shipmentService, IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _shipmentService = shipmentService;
+            _httpClientFactory = httpClientFactory;
+            _configuration = configuration;
         }
 
         [HttpPost]
@@ -75,14 +81,41 @@ namespace SmartShip.ShipmentService.API.Controllers
                 return NotFound();
             }
 
+            var trackingPayload = JsonSerializer.Serialize(new
+            {
+                shipmentId = id,
+                status = "Booked",
+                location = "Booking portal",
+                description = "Shipment booked successfully."
+            });
+
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("X-Service-Key", _configuration["ServiceAuth:Key"]);
+            var trackingResponse = await client.PostAsync(
+                $"{_configuration["ServiceUrls:TrackingService"]}/api/Tracking/internal",
+                new StringContent(trackingPayload, Encoding.UTF8, "application/json"));
+
+            if (!trackingResponse.IsSuccessStatusCode)
+            {
+                return StatusCode(StatusCodes.Status502BadGateway, new
+                {
+                    message = "Shipment booked, but its tracking event could not be created. Please contact support."
+                });
+            }
+
             return Ok(new { message = "Shipment booked successfully." });
         }
 
 
-        [HttpPost("{id}/status")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateShipmentStatus(int id, UpdateShipmentStatusDto dto) // dto becz admin can add only certain type of status
+        [HttpPost("internal/{id}/status")]
+        [AllowAnonymous]
+        public async Task<IActionResult> UpdateShipmentStatusInternal(int id, UpdateShipmentStatusDto dto)
         {
+            if (Request.Headers["X-Service-Key"] != _configuration["ServiceAuth:Key"])
+            {
+                return Unauthorized();
+            }
+
             var result = await _shipmentService.UpdateShipmentStatusAsync(id, dto.Status);
 
             if (!result)

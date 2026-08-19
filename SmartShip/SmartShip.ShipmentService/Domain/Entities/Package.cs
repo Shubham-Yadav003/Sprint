@@ -14,7 +14,7 @@ namespace SmartShip.ShipmentService.Domain.Entities
         [StringLength(250)]
         public string Description { get; set; } = string.Empty;
 
-        
+        [Range(typeof(decimal), "0.01", "1000000")]
         public decimal Weight { get; set; }
     }
 }

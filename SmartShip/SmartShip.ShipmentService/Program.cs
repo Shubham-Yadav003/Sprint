@@ -35,6 +35,7 @@ builder.Services.AddDbContext<ShipmentDbContext>(options =>
 // Register the service
 builder.Services.AddScoped<IShipmentService, ShipmentService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
+builder.Services.AddHttpClient();
 
 // Add services to the container
 //for enums as well

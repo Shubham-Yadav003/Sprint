@@ -7,7 +7,7 @@ namespace SmartShip.TrackingService.API.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class DocumentController: ControllerBase
+    public class DocumentController : ControllerBase
     {
         private readonly IDocumentService _documentService;
 

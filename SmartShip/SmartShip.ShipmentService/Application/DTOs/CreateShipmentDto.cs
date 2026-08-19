@@ -17,7 +17,7 @@ namespace SmartShip.ShipmentService.Application.DTOs
         [StringLength(250)]
         public string PackageDescription { get; set; } = string.Empty;
 
-        
+        [Range(typeof(decimal), "0.01", "1000000")]
         public decimal PackageWeight { get; set; }
     }
 }

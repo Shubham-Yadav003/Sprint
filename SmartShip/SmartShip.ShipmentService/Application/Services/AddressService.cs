@@ -2,6 +2,7 @@
 using SmartShip.ShipmentService.Application.Interfaces;
 using SmartShip.ShipmentService.Domain.Entities;
 using SmartShip.ShipmentService.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace SmartShip.ShipmentService.Application.Services
 {
@@ -32,6 +33,14 @@ namespace SmartShip.ShipmentService.Application.Services
             await _context.SaveChangesAsync();
 
             return address;
+        }
+
+        public async Task<List<Address>> GetAddressesAsync(int customerId)
+        {
+            return await _context.Addresses
+                .Where(address => address.CustomerId == customerId)
+                .OrderBy(address => address.Id)
+                .ToListAsync();
         }
     }
 }

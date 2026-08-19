@@ -11,6 +11,10 @@ namespace SmartShip.AdminService.Application.DTOs
 
         [Required]
         public string Description { get; set; } = string.Empty; // e.g., "Shipment arrived at Jaipur Hub"
+
+        // Optional for normal progress updates. Provide this for issue types such
+        // as Damaged, AddressNotFound, or WeatherDelay.
+        public global::SmartShip.AdminService.Domain.Entities.IssueType? IssueType { get; set; }
     }
 }
 

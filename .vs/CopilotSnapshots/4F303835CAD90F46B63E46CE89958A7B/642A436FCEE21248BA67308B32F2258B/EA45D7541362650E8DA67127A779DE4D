@@ -1,0 +1,21 @@
+﻿{
+
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=Lenovo_Ideapad\\SQLEXPRESS;Initial Catalog=SmartShipTrackingDb;Integrated Security=True;Encrypt=True;Trust Server Certificate=True"
+  },
+
+  "Jwt": {
+    "Key": "SmartShipSecretKeyForDevelopmentOnly12345",
+    "Issuer": "SmartShip",
+    "Audience": "SmartShipUsers",
+    "ExpiryMinutes": 60
+  },
+
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}

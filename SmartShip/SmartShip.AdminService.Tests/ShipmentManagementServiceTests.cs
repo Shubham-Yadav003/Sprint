@@ -135,5 +135,36 @@ namespace SmartShip.AdminService.Tests
             Assert.True(success);
             Assert.Contains("Active Hub", message);
         }
+
+        [Fact]
+        public async Task UpdateShipmentProgressAsync_CreatesDelayedIssue_WhenStatusIsDelayed()
+        {
+            using var context = CreateInMemoryDbContext();
+            var location = new Location { Name = "Active Hub", Address = "Add", City = "City", IsActive = true };
+            context.Locations.Add(location);
+            await context.SaveChangesAsync();
+
+            var mockHandler = new Mock<HttpMessageHandler>();
+            mockHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK));
+
+            var mockFactory = new Mock<IHttpClientFactory>();
+            mockFactory.Setup(f => f.CreateClient(It.IsAny<string>())).Returns(new HttpClient(mockHandler.Object));
+            var service = new ShipmentManagementService(context, mockFactory.Object, CreateMockConfiguration(), new Mock<IHttpContextAccessor>().Object);
+
+            var result = await service.UpdateShipmentProgressAsync(7, new UpdateShipmentProgressDto
+            {
+                LocationId = location.Id,
+                Status = "Delayed",
+                Description = "Road closure"
+            });
+
+            var issue = await context.DeliveryIssues.SingleAsync();
+            Assert.True(result.Success);
+            Assert.Equal(7, issue.ShipmentId);
+            Assert.Equal(IssueType.Delayed, issue.IssueType);
+            Assert.Equal("Open", issue.Status);
+        }
     }
 }

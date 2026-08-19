@@ -8,5 +8,7 @@ namespace SmartShip.ShipmentService.Application.Interfaces
         Task<Address> CreateAddressAsync(
             CreateAddressDto dto,
             int customerId);
+
+        Task<List<Address>> GetAddressesAsync(int customerId);
     }
 }

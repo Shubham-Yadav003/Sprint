@@ -30,5 +30,15 @@ namespace SmartShip.ShipmentService.API.Controllers
 
             return Ok(address);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAddresses()
+        {
+            var customerId = int.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            var addresses = await _addressService.GetAddressesAsync(customerId);
+            return Ok(addresses);
+        }
     }
 }
