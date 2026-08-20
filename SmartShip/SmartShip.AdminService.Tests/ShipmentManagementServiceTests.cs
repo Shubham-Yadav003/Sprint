@@ -137,34 +137,35 @@ namespace SmartShip.AdminService.Tests
         }
 
         [Fact]
-        public async Task UpdateShipmentProgressAsync_CreatesDelayedIssue_WhenStatusIsDelayed()
+        public async Task UpdateShipmentProgressAsync_ShouldReturnFailure_WhenShipmentHasOpenIssue()
         {
             using var context = CreateInMemoryDbContext();
             var location = new Location { Name = "Active Hub", Address = "Add", City = "City", IsActive = true };
             context.Locations.Add(location);
+            context.DeliveryIssues.Add(new DeliveryIssue
+            {
+                ShipmentId = 1,
+                IssueType = IssueType.Delayed,
+                Description = "Road closed",
+                Status = "Open"
+            });
             await context.SaveChangesAsync();
 
-            var mockHandler = new Mock<HttpMessageHandler>();
-            mockHandler.Protected()
-                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK));
+            var service = new ShipmentManagementService(
+                context,
+                new Mock<IHttpClientFactory>().Object,
+                CreateMockConfiguration(),
+                new Mock<IHttpContextAccessor>().Object);
 
-            var mockFactory = new Mock<IHttpClientFactory>();
-            mockFactory.Setup(f => f.CreateClient(It.IsAny<string>())).Returns(new HttpClient(mockHandler.Object));
-            var service = new ShipmentManagementService(context, mockFactory.Object, CreateMockConfiguration(), new Mock<IHttpContextAccessor>().Object);
-
-            var result = await service.UpdateShipmentProgressAsync(7, new UpdateShipmentProgressDto
+            var (success, message) = await service.UpdateShipmentProgressAsync(1, new UpdateShipmentProgressDto
             {
                 LocationId = location.Id,
-                Status = "Delayed",
-                Description = "Road closure"
+                Status = "InTransit",
+                Description = "Moving again"
             });
 
-            var issue = await context.DeliveryIssues.SingleAsync();
-            Assert.True(result.Success);
-            Assert.Equal(7, issue.ShipmentId);
-            Assert.Equal(IssueType.Delayed, issue.IssueType);
-            Assert.Equal("Open", issue.Status);
+            Assert.False(success);
+            Assert.Contains("open delivery issue", message);
         }
     }
 }

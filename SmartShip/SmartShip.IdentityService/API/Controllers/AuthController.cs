@@ -5,9 +5,9 @@ using SmartShip.IdentityService.Application.Interfaces;
 
 namespace SmartShip.IdentityService.API.Controllers;
 
-[ApiController]
+[ApiController] // 400 bad request if validation fails before reaching action method
 [Route("api/[controller]")]
-public class AuthController : ControllerBase
+public class AuthController : ControllerBase //{http response, httpcontext }
 {
     private readonly IAuthService _authService;
 

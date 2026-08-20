@@ -9,13 +9,13 @@ namespace SmartShip.ShipmentService.Tests
     public class ShipmentServiceTests
     {
         [Fact]
-        public async Task CreateShipmentAsync_WithValidData_CreatesShipment() // create a shipment with valid data
+        public async Task CreateShipmentAsync_WithValidData_CreatesShipment() // create a shipment with valid data->convention{Methodname, condition,ExpectedResult}
         {
-            var options = new DbContextOptionsBuilder<ShipmentDbContext>()
+            var options = new DbContextOptionsBuilder<ShipmentDbContext>() // instructd ef core  to use inmemory instead of sqlserver
                 .UseInMemoryDatabase("CreateShipmentTest")
                 .Options;
 
-            using var context = new ShipmentDbContext(options);
+            using var context = new ShipmentDbContext(options); // when test finishes, context will be automatically siposed of , {using -> prevents memory leaks}
 
             context.Addresses.AddRange(
                 new Address

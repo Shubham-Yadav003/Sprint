@@ -29,7 +29,7 @@ namespace SmartShip.ShipmentService.API.Controllers
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> CreateShipment(CreateShipmentDto dto)
         {
-            var customerId = int.Parse(
+            var customerId = int.Parse( // User represents Security Context of http response
                 User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
 
@@ -89,11 +89,14 @@ namespace SmartShip.ShipmentService.API.Controllers
                 description = "Shipment booked successfully."
             });
 
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient();// httpClient instance
+
             client.DefaultRequestHeaders.Add("X-Service-Key", _configuration["ServiceAuth:Key"]);
             var trackingResponse = await client.PostAsync(
                 $"{_configuration["ServiceUrls:TrackingService"]}/api/Tracking/internal",
-                new StringContent(trackingPayload, Encoding.UTF8, "application/json"));
+                new StringContent(trackingPayload, Encoding.UTF8, "application/json")); // {encodig.utf8 -> convert to bytes using -> utf8}
+            
+            
 
             if (!trackingResponse.IsSuccessStatusCode)
             {

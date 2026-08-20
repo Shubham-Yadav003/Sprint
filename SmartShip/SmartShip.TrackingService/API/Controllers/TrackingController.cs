@@ -41,7 +41,7 @@ namespace SmartShip.TrackingService.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("shipment/{shipmentId}")]
+        [HttpGet("shipment/{shipmentId}")] // tracking event trailer
         [Authorize(Roles = "Customer,Admin")]
         public async Task<IActionResult> GetTrackingEvents(int shipmentId)
         {

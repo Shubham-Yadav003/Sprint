@@ -9,14 +9,14 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;// for hasing {hash and verifyHash}
 using Microsoft.EntityFrameworkCore;
 namespace SmartShip.IdentityService.Application.Services;
 
 public class AuthService : IAuthService
 {
     private readonly IdentityDbContext _context;
-    private readonly PasswordHasher<User> _passwordHasher;
+    private readonly PasswordHasher<User> _passwordHasher; //implements IPasswordHasher<TUser>
 
     private readonly IConfiguration _configuration; // allow us to access appsettings 
 
@@ -113,7 +113,7 @@ public class AuthService : IAuthService
 
         var credentials = new SigningCredentials(
             securityKey,
-            SecurityAlgorithms.HmacSha256);
+            SecurityAlgorithms.HmacSha256); // 3rd part of token{signature}
 
         var claims = new[]
         {
@@ -122,7 +122,7 @@ public class AuthService : IAuthService
         new Claim(ClaimTypes.Role, user.Role)
     };
 
-        var token = new JwtSecurityToken(
+        var token = new JwtSecurityToken(  //jwt credential generation
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
             claims: claims,

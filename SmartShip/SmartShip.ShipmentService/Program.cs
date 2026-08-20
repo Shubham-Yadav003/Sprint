@@ -86,15 +86,15 @@ app.UseMiddleware<GlobalExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwagger(); // swagger page data
+    app.UseSwaggerUI(); // swagger ui
 }
 
-app.UseHttpsRedirection();
+app.UseHttpsRedirection(); // Adds middleware to intercept plain HTTP requests and redirect them to their secure HTTPS equivalent
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapControllers(); // for mapping to correct route  method >
 
 app.Run();

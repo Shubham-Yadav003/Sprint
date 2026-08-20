@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using SmartShip.AdminService.Application.DTOs;
 using SmartShip.AdminService.Application.Interfaces;
 using SmartShip.AdminService.Infrastructure.Data;
@@ -40,6 +41,15 @@ namespace SmartShip.AdminService.Application.Services
                 return (false, $"Location '{location.Name}' is currently inactive.");
             }
 
+            // Do not add more tracking until the admin resolves the open issue.
+            var hasOpenIssue = await _context.DeliveryIssues.AnyAsync(
+                i => i.ShipmentId == shipmentId && i.Status == "Open");
+
+            if (hasOpenIssue)
+            {
+                return (false, "This shipment has an open delivery issue. Resolve it before adding more tracking.");
+            }
+
             // 2. Prepare HTTP client for internal service calls.
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("X-Service-Key", _configuration["ServiceAuth:Key"]);
@@ -73,30 +83,7 @@ namespace SmartShip.AdminService.Application.Services
                 return (false, $"Shipment status updated, but failed to log tracking event. (Status: {trackingResponse.StatusCode})");
             }
 
-            // A Delayed status is always a delivery issue. For other issue types,
-            // the admin supplies dto.IssueType in the progress request.
-            var issueType = dto.IssueType;
-            if (issueType == null && string.Equals(dto.Status, "Delayed", StringComparison.OrdinalIgnoreCase))
-            {
-                issueType = global::SmartShip.AdminService.Domain.Entities.IssueType.Delayed;
-            }
-
-            if (issueType != null)
-            {
-                _context.DeliveryIssues.Add(new global::SmartShip.AdminService.Domain.Entities.DeliveryIssue
-                {
-                    ShipmentId = shipmentId,
-                    IssueType = issueType.Value,
-                    Description = dto.Description,
-                    Status = "Open",
-                    CreatedAt = DateTime.UtcNow
-                });
-
-                await _context.SaveChangesAsync();
-            }
-
-            var issueMessage = issueType != null ? " An open delivery issue was created." : string.Empty;
-            return (true, $"Shipment status updated to '{dto.Status}' and tracking event logged at '{location.Name}'.{issueMessage}");
+            return (true, $"Shipment status updated to '{dto.Status}' and tracking event logged at '{location.Name}'.");
         }
     }
 }

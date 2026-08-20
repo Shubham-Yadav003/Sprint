@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿// response 5002
+using System.Net;
 using System.Text.Json;
 namespace SmartShip.IdentityService.API.Middleware
 {
@@ -34,7 +35,7 @@ namespace SmartShip.IdentityService.API.Middleware
                 message = "An unexpected error occured."
             };
 
-            await context.Response.WriteAsync(
+            await context.Response.WriteAsync( // attach to response body -> to client
                 JsonSerializer.Serialize(response));
         }
     }
